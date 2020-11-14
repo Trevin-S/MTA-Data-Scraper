@@ -1,67 +1,18 @@
-import time
-import requests
-import keyboard
-import mechanize
-import random
+import time, requests, keyboard, mechanize
 from lxml import html
 from bs4 import BeautifulSoup
 from tkinter import Tk
-import classes
+
+import user, agent_data, title_agencies
  
-User = classes.user()
-TitleAgencies = classes.titleAgencies()
-Agent = classes.agent()
- 
-x = 0
- 
-def programStartup():
- 
-    print(' Trevin Small, 02/14/2019.')
-    print('\n Program: MTA Data Scraper')
-    print(' Version 1.6 (DTL&L) \n \n')
- 
-    getAgencies()
- 
-    print(' Data Recieved! \n \n')
-    print(' Program Ready to Use. \n')
-    print(' Left Arrow Key Copies from MyMTA Market Share Reports.')
-    print(' Right Arrow Key Pastes into DriggsTitle Reports.')
-    print(' Minus Sign clears an MTA Report to fix mistakes.')
-    print(' Esc Key closes the program.\n')
-    print(' (Make sure to click onto a seperate program, the program')
-    print(' will not work correctly if it is the active window)')
- 
-def credentials():
- 
-    print('\n Press First Letter of Name to Select User.')
-    print(' Trevin, Gracie, Serra [T/G/S]')
- 
-    nameSelected = False
- 
-    while nameSelected == False:
- 
-        if keyboard.is_pressed('t'):
- 
-            User.select_user(0)
-            nameSelected = True
- 
-        elif keyboard.is_pressed('g'):
- 
-            User.select_user(1)
-            nameSelected = True
- 
-        elif keyboard.is_pressed('s'):
- 
-            User.select_user(2)
-            nameSelected = True
- 
-        time.sleep(0.02)
+User = user.User()
+Title_Agencies = title_agencies.Title_Agencies()
+Agent = agent_data.Agent_Data()
  
 def getAgencies():
- 
-    credentials()
+
     agencyList = []
- 
+
     # Browser Objects
     driggs = mechanize.Browser()
  
@@ -223,12 +174,8 @@ def copyData():
  
 def pasteData():
  
-    global x
- 
-    if keyboard.is_pressed('right arrow'):
- 
         # Repeat as many times as there is deals
-        for x in range(x, Agent.deal_count()):
+        for Agent.paste_iteration in range(Agent.get_paste_iteration(), Agent.deal_count()):
             
             matchFound = True
             arrowKeyCount = 0
@@ -239,7 +186,7 @@ def pasteData():
  
             for i in range(TitleAgencies.agency_count()):
  
-                if Agent.title_name(x, 0, 4) in TitleAgencies.short_agency(i):
+                if Agent.title_name(Agent.get_paste_iteration(), 0, 4) in TitleAgencies.short_agency(i):
  
                     occurences += 1
  
@@ -249,7 +196,7 @@ def pasteData():
  
                 for i in range(TitleAgencies.agency_count()):
  
-                    if Agent.title_name(x, 0, 4) in titleAgencies.short_agency(i) and Agent.title_name(x, 0, 3) in TitleAgencies.short_agency(i, 0, 4):
+                    if Agent.title_name(Agent.get_paste_iteration(), 0, 4) in titleAgencies.short_agency(i) and Agent.title_name(Agent.paste_iteration(), 0, 3) in TitleAgencies.short_agency(i, 0, 4):
  
                         shortDuplicate = i
                         break
@@ -258,7 +205,7 @@ def pasteData():
  
                     for i in range(TitleAgencies.agency_count()):
  
-                        if Agent.title_name(x) in TitleAgencies.long_agency(i) and Agent.title_name(x, 0, 4) in TitleAgencies.long_agency(i, 0, 4):
+                        if Agent.title_name(Agent.paste_iteration()) in TitleAgencies.long_agency(i) and Agent.title_name(Agent.paste_iteration(), 0, 4) in TitleAgencies.long_agency(i, 0, 4):
  
                             fullDuplicate = i
                             matchFound = True
@@ -267,17 +214,17 @@ def pasteData():
                     if nameLength > 7 and matchFound == False:
  
                         nameLength -= 1
-                        Agent.update_title_name(x, Agent.title_name(x, 0, nameLength))
+                        Agent.update_title_name(Agent.paste_iteration(), Agent.title_name(Agent.paste_iteration(), 0, nameLength))
  
             if occurences == 0 or matchFound == False:
  
-                Agent.update_title_name(x, 'othe')
+                Agent.update_title_name(Agent.paste_iteration(), 'othe')
                 shortDuplicate = 0
                 fullDuplicate = 0
     
             arrowKeyCount = shortDuplicate - fullDuplicate
  
-            keyboard.write(Agent.title_name(x, 0, 4), 0.01)
+            keyboard.write(Agent.title_name(Agent.paste_iteration(), 0, 4), 0.01)
             time.sleep(0.01)
  
             for i in range(abs(arrowKeyCount)):
@@ -287,24 +234,24 @@ def pasteData():
  
             keyboard.press_and_release('tab')
             time.sleep(0.01)
-            keyboard.write(Agent.listing_side(x), 0.01)
+            keyboard.write(Agent.listing_side(Agent.paste_iteration()), 0.01)
             time.sleep(0.01)
             keyboard.press_and_release('tab')
             time.sleep(0.01)
-            keyboard.write(Agent.ms1(x), 0.01)
+            keyboard.write(Agent.ms1(Agent.paste_iteration()), 0.01)
             time.sleep(0.01)
             keyboard.press_and_release('tab')
             time.sleep(0.01)
-            keyboard.write(Agent.buy_side(x), 0.01)
+            keyboard.write(Agent.buy_side(Agent.paste_iteration()), 0.01)
             time.sleep(0.01)
             keyboard.press_and_release('tab')
             time.sleep(0.01)
-            keyboard.write(Agent.ms2(x), 0.01)
+            keyboard.write(Agent.ms2(Agent.paste_iteration()), 0.01)
             time.sleep(0.01)
             keyboard.press_and_release('tab')
             time.sleep(0.01)
  
-            if (x + 1) % 30 != 0:
+            if (Agent.paste_iteration() + 1) % 30 != 0:
  
                 User.set_full(False)
  
@@ -317,14 +264,12 @@ def pasteData():
         if User.is_full() == False:
  
             print('\n \n Paste Finished. \n')
-            x = 0
+            Agent.set_paste_iteration(0)
  
     time.sleep(0.2)
  
  
 def clearPaste():
- 
-    if keyboard.is_pressed('-'):
  
         for i in range(Agent.deal_count()):
  
@@ -352,10 +297,24 @@ def clearPaste():
  
             if (i + 1) % 30 == 0:
                 break
+
+
+getAgencies() 
+
+while User.is_running() == True:
+    
+    if User.is_paused() == False:
  
- 
-def pauseProgram():
- 
+        if keyboard.is_pressed('left arrow'):
+            print('\n Data Copy Started, Please Wait.')
+            getData()
+
+        if keyboard.is_pressed('right arrow'):
+            pasteData()
+
+        if keyboard.is_pressed('-'):
+            clearPaste()
+
     if keyboard.is_pressed('+') and User.get_last_state() == False:
  
         User.pause(not User.is_paused())
@@ -372,24 +331,8 @@ def pauseProgram():
     elif not keyboard.is_pressed('+'):
  
         User.last_state(False)
- 
- 
- 
-def exitProgram():
- 
+
     if keyboard.is_pressed('esc'):
         User.stop_running()
- 
-programStartup()
- 
-while User.is_running() == True:
-    
-    if User.is_paused() == False:
- 
-        copyData()
-        pasteData()
-        clearPaste()
- 
-    pauseProgram()
-    exitProgram()
+
     time.sleep(.01)
