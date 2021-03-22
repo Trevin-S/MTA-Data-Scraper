@@ -18,14 +18,14 @@ def programStartup():
  
     print(' Trevin Small, 02/14/2019.')
     print('\n Program: MTA Data Scraper')
-    print(' Version 1.6 (DTL&L) \n \n')
+    print(' Version 1.6 \n \n')
  
     getAgencies()
  
     print(' Data Recieved! \n \n')
     print(' Program Ready to Use. \n')
     print(' Left Arrow Key Copies from MyMTA Market Share Reports.')
-    print(' Right Arrow Key Pastes into DriggsTitle Reports.')
+    print(' Right Arrow Key Pastes into Reports.')
     print(' Minus Sign clears an MTA Report to fix mistakes.')
     print(' Esc Key closes the program.\n')
     print(' (Make sure to click onto a seperate program, the program')
@@ -34,23 +34,23 @@ def programStartup():
 def credentials():
  
     print('\n Press First Letter of Name to Select User.')
-    print(' Trevin, Gracie, Serra [T/G/S]')
+    print(' _Insert List of Names_ [a/b/c]')
  
     nameSelected = False
  
     while nameSelected == False:
  
-        if keyboard.is_pressed('t'):
+        if keyboard.is_pressed('a'):
  
             User.select_user(0)
             nameSelected = True
  
-        elif keyboard.is_pressed('g'):
+        elif keyboard.is_pressed('b'):
  
             User.select_user(1)
             nameSelected = True
  
-        elif keyboard.is_pressed('s'):
+        elif keyboard.is_pressed('c'):
  
             User.select_user(2)
             nameSelected = True
@@ -65,7 +65,7 @@ def getAgencies():
     # Browser Objects
     driggs = mechanize.Browser()
  
-    print(' Requesting Driggs Title Data \n')
+    print(' Requesting Data \n')
     driggs.open('https://www.driggstitle.com/beta/')
     driggs.forms()
     driggs.select_form(nr = 0)
