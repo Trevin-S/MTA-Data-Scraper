@@ -18,19 +18,14 @@
 class user():
  
     def __init__(self):
-        # User credentials
-        # 'gracie'
-        # 'Wallace1'
-        # 'serraa'
-        # 'Dreamteam'
-        self.usernames = ['trevins','gracie','serraa']
-        self.password = read(open("password.txt", "r"))
+        self.username = 'Trevin'
+        self.passFile = open("password.txt", "r")
+        self.password = self.passFile.read()
         self.paused = False
         self.lastState = False
         self.running = True
- 
-    def select_user(self, userIndex):
-        self.username = self.usernames[userIndex]
+
+        self.passFile.close()  
  
     def get_username(self):
         return self.username
@@ -61,9 +56,12 @@ class titleAgencies:
     def __init__(self):
         self.titleAgenciesLong = []
         self.titleAgenciesShort = []
+
+    def get_title_agencies(self):
+        return self.titleAgenciesShort
  
     def add_long_agency(self, agency):
-        self.titleAgenciesShort.append(agency)
+        self.titleAgenciesLong.append(agency)
  
     def add_short_agency(self, agency):
         self.titleAgenciesShort.append(agency)
@@ -83,6 +81,7 @@ class agent:
  
     def __init__(self): # Instance Attributes
         self.dealCount = 0
+        self.full = False
         agent.clear_deals()
  
     def add_deal(self, titleName, listingSide, MS1, buySide, MS2): # Instance Methods / Procedural Attributes
@@ -93,9 +92,13 @@ class agent:
  
     def deal_count(self):
         return self.dealCount
+
+    def reset_deal_count(self):
+        self.dealCount = 0
+        self.clear_deals()
  
     def update_title_name(self, x, name):
-        self.deals[x][1] = name
+        self.deals[x][0] = name
  
     def title_name(self, dealIndex, start = None, end = None):
         return self.deals[dealIndex][0][start:end]
