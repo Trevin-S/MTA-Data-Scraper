@@ -1,24 +1,7 @@
-# Classes
- 
-# Attributes - Variable which holds value inside a class. Two types:
-# Instance Attributes - Unique for seperate instances *SELF.VARIABLE*
-# Class Attributes - Shared among all instances of class, also usable without instance, accesible via class name *STANDARD VARIABLE OUTSIDE METHODS*
- 
-# Methods - Fucntions inside classes
-# Instance Methods / Procedural Attributes - Unique per instance, interacts with instance attributes. *SELF IS ALWAYS FIRST PARAM*
-# Class Methods - Shared among all instances, accesible with no instance via class name. Interacts with class attributes *CLS IS ALWAYS FIRST PARAM*
- 
-# Getters - Method which "Gets" or returns some attribute 
-# Setters - Method which "Sets" or assigns some value to some attribute
- 
-# Special Methods (dunder methods)
-# __init__  instance constructor - creates new instance of the object
-# __del__()  instance destructor - destroys object when no longer needed. Rarely used, python mem management handles destruction automatically.
- 
 class user():
  
     def __init__(self):
-        self.username = 'Trevin'
+        self.username = 'user'
         self.passFile = open("password.txt", "r")
         self.password = self.passFile.read()
         self.paused = False
@@ -77,14 +60,14 @@ class titleAgencies:
  
 class agent:
  
-    deals = [] # Class Attribute
+    deals = []
  
-    def __init__(self): # Instance Attributes
+    def __init__(self): 
         self.dealCount = 0
         self.full = False
         agent.clear_deals()
  
-    def add_deal(self, titleName, listingSide, MS1, buySide, MS2): # Instance Methods / Procedural Attributes
+    def add_deal(self, titleName, listingSide, MS1, buySide, MS2): 
         self.new_deal = [titleName, listingSide, MS1, buySide, MS2]
         self.deals.append(self.new_deal)
         self.dealCount += 1
