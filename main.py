@@ -119,7 +119,7 @@ def getData():
  
 	if '<a href="mailto:info@mymta.com">info@mymta.com</a>' in NONE:
  
-		Agent.add_deal('none', 1, 1, 1, 1)
+		Agent.add_deal('none', '1', '1', '1', '1')
 		count = 1
 	
 	elif count == 0:
